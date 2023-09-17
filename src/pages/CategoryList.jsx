@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Ebook from './Ebook';
-import Audio from './Audio';
 import { useNavigation } from '@react-navigation/native';
+import CategoryAudio from './CategoryAudio';
 
 const CategoryList = () => {
     const [selectedTab, setSelectedTab] = useState('Tab1');
@@ -18,7 +17,7 @@ const CategoryList = () => {
             >
                 <Image style={{height: 15, width: 15}} source={require('../../assets/icons/back.png')} />
             </Pressable>
-            <Text style={{fontSize: 20, fontWeight: 450, width: '62%'}}>Non-fiction</Text>
+            <Text style={{fontSize: 20, fontWeight: 400, width: '62%'}}>Non-fiction</Text>
         </View>
 
               {/* TAB */}
@@ -46,9 +45,9 @@ const CategoryList = () => {
               contentContainerStyle={styles.scrollCon}
           >
             {selectedTab === 'Tab1' 
-             ?<Ebook />
+             ?<CategoryAudio />
              :selectedTab === 'Tab2' 
-            ?<Audio selectedTab={selectedTab} />
+            ?<CategoryAudio selectedTab={selectedTab} />
             :''
              }
           </ScrollView>

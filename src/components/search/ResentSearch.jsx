@@ -8,7 +8,7 @@ const ResentSearch = () => {
         <View style={styles.titleCon}>
           <Text style={{fontSize: 20, fontWeight: 400, marginBottom: 22}}>Recent search</Text>
         </View>
-        <View style={{width: '100%',}}>
+        <View style={{width: '100%'}}>
             <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}

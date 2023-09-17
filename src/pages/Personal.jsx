@@ -1,10 +1,12 @@
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StatusBar } from 'react-native';
+import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 const Personal = () => {
     const navigation = useNavigation();
   return (
+    <SafeAreaView style={styles.container}>
     <ScrollView
     contentContainerStyle={styles.wrapper}
     >
@@ -68,10 +70,16 @@ const Personal = () => {
         </View>
 
     </ScrollView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#FFD672',
+        paddingTop: StatusBar.currentHeight, 
+    },
     wrapper: {
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
@@ -85,7 +93,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'space-between',
         width: '67%',
-        marginTop: 55,
+        marginTop: 25,
     },
     backCon: {
         alignItems: 'center',

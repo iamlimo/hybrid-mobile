@@ -2,7 +2,7 @@
 
 // import "react-native-gesture-handler";
 // import React, { useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 
@@ -24,7 +24,7 @@ import PasswordReset from "../signup/PasswordReset";
 import Prompt from "../signup/Prompt";
 import Subscription from "../signup/Subscription";
 import Sucess from "../signup/Sucess";
-import Dashboard from "../dashboard/Dashboard";
+// import Dashboard from "../dashboard/Dashboard";
 import BookShelf from "../src/pages/BookShelf";
 import CategoryList from "../src/pages/CategoryList";
 import Search from "../src/pages/Search";
@@ -37,6 +37,10 @@ import EditNote from "../src/pages/EditNote";
 import NewJotter from "../src/pages/NewJotter";
 import Message from "../src/pages/Message";
 import ChatInbox from "../src/pages/ChatInbox";
+import Ebook from "../src/pages/Ebook";
+import Review from "../src/components/book/Review";
+import BookDetails from "../src/pages/BookDetails";
+import Home from "../src/pages/Home";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -63,43 +67,45 @@ function RootStack({}) {
 		);
 	}
 
-	function Roots() {
-		return (
-			<Drawer.Navigator>
-				<Drawer.Screen
-					options={({ navigation }) => {
-						return {
-							drawerIcon: () => (
-								<AntDesign name="home" size={24} color="#000000" />
-							),
+	// function Roots() {
+	// 	return (
+	// 		<Drawer.Navigator>
+	// 			<Drawer.Screen
+	// 				options={({ navigation }) => {
+	// 					return {
+	// 						drawerIcon: () => (
+	// 							<AntDesign name="home" size={24} color="#000000" />
+	// 						),
 
-							headerTitle: () => <HeaderTitle navigation={navigation} />,
-						};
-					}}
-					name="Home"
-					component={Dashboard}
-					initialParams={{ itemId: "" }}
-				/>
-			</Drawer.Navigator>
-		);
-	}
+	// 						headerTitle: () => <HeaderTitle navigation={navigation} />,
+	// 					};
+	// 				}}
+	// 				name="Home"
+	// 				component={Home}
+	// 				initialParams={{ itemId: "" }}
+	// 			/>
+	// 		</Drawer.Navigator>
+	// 	);
+	// }
 
 	function Tabs() {
 		return (
 			<Tab.Navigator
 				screenOptions={{
 					labelStyle: { fontSize: 22 },
-					tabBarStyle: { backgroundColor: "#000000", color: "#ffff" },
+					tabBarStyle: { backgroundColor: "#1338BE", color: "#ffff", height: 65, paddingBottom: 10, paddingTop: 5},
 					activeTintColor: "#FFD672",
-					inactiveTintColor: "black",
+					inactiveTintColor: "#FFFF",
 				}}
 			>
 				<Tab.Screen
-					name="dashboards"
-					component={Roots}
+					name="home"
+					component={Home}
 					options={{
 						headerShown: false,
-						tabBarLabel: "Library",
+						tabBarLabel: () => (
+							<Text style={{fontSize: 12, color: '#FFFFFF'}}>Library</Text>
+						),
 						tabBarIcon: ({ color }) => (
 							<Ionicons name="md-library-outline" size={24} color="#FFD672" />
 						),
@@ -110,31 +116,25 @@ function RootStack({}) {
 					component={BookShelf}
 					options={{
 						headerShown: false,
-						tabBarLabel: "BookShelf",
+						tabBarLabel: () => (
+							<Text style={{fontSize: 12, color: '#FFFFFF'}}>BookShelf</Text>
+						),
 						tabBarIcon: ({ color }) => (
-							<Ionicons name="md-book-outline" size={24} color="#FFD672" />
+							// <Ionicons name="md-book-outline" size={24} color="#FFD672" />
+							<Image style={{height: 24, width: 24}} source={require('../assets/icons/bookShelf.png')} />
 						),
 					}}
 				/>
-				{/* <Tab.Screen
+				<Tab.Screen
 					name="Search"
 					component={Search}
 					options={{
 						headerShown: false,
-						tabBarLabel: "Search",
-						tabBarIcon: ({ color }) => (
-							<Ionicons name="md-search-outline" size={24} color="#FFD672" />
+						tabBarLabel: () => (
+							<Text style={{fontSize: 12, color: '#FFFFFF'}}>Search</Text>
 						),
-					}}
-				/> */}
-				<Tab.Screen
-					name="Search"
-					component={Message}
-					options={{
-						headerShown: false,
-						tabBarLabel: "Search",
 						tabBarIcon: ({ color }) => (
-							<Ionicons name="md-search-outline" size={24} color="#FFD672" />
+							<Ionicons name="md-search" size={24} color="#FFD672" />
 						),
 					}}
 				/>
@@ -143,15 +143,18 @@ function RootStack({}) {
 					component={Profile}
 					options={{
 						headerShown: false,
-						tabBarLabel: "Profile",
+						tabBarLabel: () => (
+							<Text style={{fontSize: 12, color: '#FFFFFF'}}>My Account</Text>
+						),
 						tabBarIcon: ({ color }) => (
-							<Ionicons name="md-person-outline" size={24} color="#FFD672" />
+							<Ionicons name="md-person" size={24} color="#FFD672" />
 						),
 					}}
 				/>
 			</Tab.Navigator>
 		);
 	}
+
 	const [fontsLoaded] = useFonts({
 		Inter: require("../assets/fonts/Inter-Regular.ttf"),
 		InterBold: require("../assets/fonts/Inter-Bold.ttf"),
@@ -307,6 +310,38 @@ function RootStack({}) {
 				component={ChatInbox} 
 				options={{
 					title: "chatInbox",
+					headerShown: false,
+				}}
+				/>
+				<Stack.Screen 
+				name="eBook" 
+				component={Ebook} 
+				options={{
+					title: "eBook",
+					headerShown: false,
+				}}
+				/>
+				<Stack.Screen 
+				name="review" 
+				component={Review} 
+				options={{
+					title: "review",
+					headerShown: false,
+				}}
+				/>
+				<Stack.Screen 
+				name="bookDetails" 
+				component={BookDetails} 
+				options={{
+					title: "bookDetails",
+					headerShown: false,
+				}}
+				/>
+				<Stack.Screen 
+				name="message" 
+				component={Message} 
+				options={{
+					title: "message",
 					headerShown: false,
 				}}
 				/>

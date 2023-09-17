@@ -27,6 +27,7 @@ const Message = () => {
 
             <Pressable
             style={styles.addCon}
+            // onPress={() => navigation.navigate('eBook')}
             >
                 <Ionicons name="add-outline" size={24} color="#1338BE" strokeWidth={50}  />
             </Pressable>
