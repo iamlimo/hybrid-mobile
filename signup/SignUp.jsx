@@ -36,11 +36,11 @@ export default function SignUp({ navigation }) {
 		  };
 		const userData = {name, email, username, password, password_confirmation: confirmPassword};
 		axios.post(`/auth/register`,
-		{userData}, 
+		userData, 
 		{headers},)
 		.then(response => {
-			console.log('Response:', response.data.message);
-		  if (response.data.success && !nameError && !emailError && !passwordError ) {
+			console.log(response.data.message);
+		  if (response.status >= 200 && !nameError && !emailError && !passwordError ) {
 			// Registration successful
 			navigation.navigate("verification")
 			setError('');
@@ -50,7 +50,7 @@ export default function SignUp({ navigation }) {
 		  }
 		})
 		.catch(error => {
-		  console.error('Registration failed:', error);
+		  console.error('Registration failed:', error.datda.message);
 		  setError('Registration failed. Please try again later.');
 		});
 	}
