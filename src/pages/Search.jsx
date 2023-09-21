@@ -1,15 +1,17 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react'
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
 import SearchInput from '../components/search/SearchInput';
 import TopCategory from '../components/search/TopCategory';
 import ResentSearch from '../components/search/ResentSearch';
 import TopAuthors from '../components/search/TopAuthors';
+import { SafeAreaView } from 'react-native';
 
 const Search = () => {
     const navigation = useNavigation();
 
   return (
+    <SafeAreaView style={styles.container}>
     <ScrollView 
     contentContainerStyle={styles.wrapper}
     >
@@ -38,10 +40,16 @@ const Search = () => {
         <TopAuthors />
 
     </ScrollView>
+    </SafeAreaView>
       )
     }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#FFD672',
+        paddingTop: StatusBar.currentHeight, 
+      },
     wrapper: {
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
@@ -56,7 +64,7 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 40,
         paddingHorizontal: 18,
-        paddingTop: 18,
+        paddingTop: 0,
     },
     backCon: {
         alignItems: 'center',

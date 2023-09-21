@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
 import ReadingNow from '../components/profile/ReadingNow';
+import { SafeAreaView } from 'react-native';
 
 const Profile = () => {
     const navigation = useNavigation();
@@ -44,6 +45,7 @@ const Profile = () => {
 
 
   return (
+    <SafeAreaView style={styles.container}>
     <ScrollView
     contentContainerStyle={styles.wrapper}
     >
@@ -100,7 +102,7 @@ const Profile = () => {
         <View style={styles.activityWrapper}>
             {activity.map((item) => {
                 return(
-            <Pressable 
+            <Pressable key={item.id}
             onPress={() => navigation.navigate(item.link)}
             style={styles.activityCon}>
                 <View style={styles.leftDiv}>
@@ -116,10 +118,16 @@ const Profile = () => {
         </View>
 
     </ScrollView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#FFD672',
+        paddingTop: StatusBar.currentHeight, 
+      },
     wrapper: {
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
@@ -132,7 +140,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
-        marginTop: 40,
+        marginTop: 10,
         paddingHorizontal: 18,
         paddingTop: 18,
     },

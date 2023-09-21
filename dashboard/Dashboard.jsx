@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { ProgressBar, MD3Colors } from "react-native-paper";
 import { dashboard } from "./dashboardstyle";
+import { useNavigation } from "@react-navigation/native";
+
 export default function Dashboard({ navigation }) {
 	const [selectone, setSelectOne] = useState(1);
 	const activeone = () => {
@@ -23,6 +25,9 @@ export default function Dashboard({ navigation }) {
 		setSelectOne(2);
 		console.log("hello 2");
 	};
+
+	// const navigation = useNavigation();
+
 	return (
 		<ScrollView
 			showsVerticalScrollIndicator={false}
@@ -52,9 +57,8 @@ export default function Dashboard({ navigation }) {
 						// marginBottom: 30,
 						alignSelf: "center",
 					}}
-					source={require("../assets/book.png")}
+					source={require("../assets/images/book.png")}
 				/>
-
 				<View>
 					<Text
 						style={{
@@ -77,7 +81,7 @@ export default function Dashboard({ navigation }) {
 						alignSelf: "center",
 					}}
 				>
-					<Button title="continue reading" color="#ffff" />
+					<Button onPress={() => navigation.navigate('eBook')} title="continue reading" color="#ffff" />
 				</View>
 				<View>
 					<Text
@@ -85,7 +89,6 @@ export default function Dashboard({ navigation }) {
 							color: "#141414",
 							fontFamily: "InterBold",
 							fontSize: 17,
-							// marginLeft: 47,
 							marginTop: 20,
 						}}
 					>
@@ -148,7 +151,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{}}
-									source={require("../assets/adventures.png")}
+									source={require("../assets/images/adventures.png")}
 								/>
 								<Text
 									style={{
@@ -173,7 +176,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{}}
-									source={require("../assets/pyschology.png")}
+									source={require("../assets/images/psychology.png")}
 								/>
 								<Text
 									style={{
@@ -204,7 +207,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{ alignSelf: "center", marginLeft: 5 }}
-									source={require("../assets/money.png")}
+									source={require("../assets/images/money.png")}
 								/>
 								<Text
 									style={{
@@ -231,7 +234,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{ alignSelf: "center", marginLeft: 5 }}
-									source={require("../assets/romance.png")}
+									source={require("../assets/images/romance.png")}
 								/>
 								<Text
 									style={{
@@ -259,7 +262,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{ alignSelf: "center", marginLeft: 5 }}
-									source={require("../assets/science.png")}
+									source={require("../assets/images/science.png")}
 								/>
 								<Text
 									style={{
@@ -300,7 +303,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{}}
-									source={require("../assets/adventures.png")}
+									source={require("../assets/images/adventures.png")}
 								/>
 								<Text
 									style={{
@@ -325,7 +328,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{}}
-									source={require("../assets/pyschology.png")}
+									source={require("../assets/images/psychology.png")}
 								/>
 								<Text
 									style={{
@@ -356,7 +359,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{ alignSelf: "center", marginLeft: 5 }}
-									source={require("../assets/money.png")}
+									source={require("../assets/images/money.png")}
 								/>
 								<Text
 									style={{
@@ -383,7 +386,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{ alignSelf: "center", marginLeft: 5 }}
-									source={require("../assets/romance.png")}
+									source={require("../assets/images/romance.png")}
 								/>
 								<Text
 									style={{
@@ -411,7 +414,7 @@ export default function Dashboard({ navigation }) {
 							>
 								<Image
 									style={{ alignSelf: "center", marginLeft: 5 }}
-									source={require("../assets/science.png")}
+									source={require("../assets/images/science.png")}
 								/>
 								<Text
 									style={{

@@ -6,7 +6,7 @@ import Psychology from '../components/categoryList/Psychology'
 import Recommended from '../components/categoryList/Recommended'
 import BestSelling from '../components/categoryList/BestSelling'
 
-const Audio = ({selectedTab}) => {
+const CategoryAudio = ({selectedTab}) => {
   return (
     <View>
         <History selectedTab={selectedTab} />
@@ -18,4 +18,4 @@ const Audio = ({selectedTab}) => {
   )
 }
 
-export default Audio
+export default CategoryAudio
