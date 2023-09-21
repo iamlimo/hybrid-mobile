@@ -13,7 +13,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { pinStyle } from "./otp";
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
+import { useState } from "react";
+
+
 export default function Login({ navigation }) {
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
+
+	const handleSubmit = () => {
+	}
+
 	return (
 		<SafeAreaView>
 			<ScrollView
