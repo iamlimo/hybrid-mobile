@@ -1,6 +1,9 @@
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useDispatch } from 'react-redux'
+import { logoutUser } from '../Store/AuthSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Settings = () => {
 
@@ -33,6 +36,19 @@ const Settings = () => {
     ]
 
     const navigation = useNavigation();
+
+    const dispatch = useDispatch();
+
+    const handleLogout = async () => {
+        try {
+            await AsyncStorage.removeItem("userData")
+            console.log('LOGGED OUT');
+            dispatch(logoutUser())
+            navigation.navigate("login")
+          } catch (error) {
+            console.log(error);
+          }
+    }
 
   return (
     <ScrollView
@@ -85,7 +101,9 @@ const Settings = () => {
         onPress={() => navigation.navigate('login')}
         style={styles.button}>
             <Image style={{height: 18, width: 17.58}} source={require('../../assets/icons/logout.png')} />
-            <Text style={{fontSize: 16, fontWeight: 500, color: '#FFD672'}}>Log Out</Text>
+            <Text style={{fontSize: 16, fontWeight: 500, color: '#FFD672'}}
+            onPress={handleLogout}
+            >Log Out</Text>
         </Pressable>
     </ScrollView>
   )

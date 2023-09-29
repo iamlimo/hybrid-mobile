@@ -47,7 +47,7 @@ const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 SplashScreen.preventAutoHideAsync();
 
-function RootStack({}) {
+function AppStack({}) {
 	function HeaderTitle({ navigation }) {
 		return (
 			<View
@@ -67,26 +67,6 @@ function RootStack({}) {
 		);
 	}
 
-	// function Roots() {
-	// 	return (
-	// 		<Drawer.Navigator>
-	// 			<Drawer.Screen
-	// 				options={({ navigation }) => {
-	// 					return {
-	// 						drawerIcon: () => (
-	// 							<AntDesign name="home" size={24} color="#000000" />
-	// 						),
-
-	// 						headerTitle: () => <HeaderTitle navigation={navigation} />,
-	// 					};
-	// 				}}
-	// 				name="Home"
-	// 				component={Home}
-	// 				initialParams={{ itemId: "" }}
-	// 			/>
-	// 		</Drawer.Navigator>
-	// 	);
-	// }
 
 	function Tabs() {
 		return (
@@ -177,7 +157,7 @@ function RootStack({}) {
 		<NavigationContainer>
 			<View onLayout={onLayoutRootView}></View>
 			<Stack.Navigator initialRouteName="SplashScreens">
-				<Stack.Screen
+				{/* <Stack.Screen
 					name="splash"
 					component={Splash}
 					options={{
@@ -192,7 +172,7 @@ function RootStack({}) {
 						title: "Splash Screen",
 						headerShown: false, //Set Header Title
 					}}
-				/>
+				/> */}
 				<Stack.Screen
 					name="tab"
 					component={Tabs}
@@ -201,17 +181,17 @@ function RootStack({}) {
 						headerShown: false, //Set Header Title
 					}}
 				/>
-				<Stack.Screen
+					<Stack.Screen
+						name="login"
+						component={Login}
+						options={{
+							title: "Splash Screen",
+							headerShown: false, //Set Header Title
+						}}
+					/>
+				{/* <Stack.Screen
 					name="verification"
 					component={Verification}
-					options={{
-						title: "Splash Screen",
-						headerShown: false, //Set Header Title
-					}}
-				/>
-				<Stack.Screen
-					name="login"
-					component={Login}
 					options={{
 						title: "Splash Screen",
 						headerShown: false, //Set Header Title
@@ -224,15 +204,15 @@ function RootStack({}) {
 						title: "Splash Screen",
 						headerShown: false, //Set Header Title
 					}}
-				/>
-				<Stack.Screen
+				/> */}
+				{/* <Stack.Screen
 					name="prompt"
 					component={Prompt}
 					options={{
 						title: "Splash Screen",
 						headerShown: false, //Set Header Title
 					}}
-				/>
+				/> */}
 				<Stack.Screen
 					name="subscription"
 					component={Subscription}
@@ -350,4 +330,4 @@ function RootStack({}) {
 	);
 }
 
-export default RootStack;
+export default AppStack;
