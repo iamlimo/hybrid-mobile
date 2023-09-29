@@ -108,6 +108,9 @@ export const pinStyle = StyleSheet.create({
 		color: "#0468BF",
 	},
 	buttomgroup: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
 		marginVertical: 30,
 	},
 	button: {

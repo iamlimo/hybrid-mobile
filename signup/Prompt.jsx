@@ -61,7 +61,7 @@ export default function Prompt({ navigation }) {
 					</View>
 					<View>
 						<TouchableOpacity
-							onPress={() => navigation.navigate("subscription")}
+							onPress={() => navigation.navigate("login")}
 							style={{
 								backgroundColor: "#FFD672",
 								padding: 15,

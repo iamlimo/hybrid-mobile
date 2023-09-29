@@ -1,5 +1,4 @@
 /** @format */
-
 import { StatusBar } from "expo-status-bar";
 import {
 	StyleSheet,
@@ -8,88 +7,70 @@ import {
 	View,
 	ScrollView,
 	TextInput,
+    Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/core";
+import { useDispatch, useSelector } from "react-redux";
+import { registerFailed, registerPending, registerSuccessful} from "../src/Store/AuthSlice";
 import axios from "../src/axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-export default function SignUp({ navigation }) {
-	const [name, setName] = useState('')
-	const [username, setUsername] = useState('')
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
-	const [confirmPassword, setConfirmPassword] = useState('')
-	const [nameError, setNameError] = useState('');
-	const [usernameError, setUsernameError] = useState('');
-	const [emailError, setEmailError] = useState('');
-	const [passwordError, setPasswordError] = useState('');
-	const [error, setError] = useState('');
+const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(3, 'Too Short!')
+      .max(50, 'Too Long!')
+      .required('Please enter your full name.'),
+    username: Yup.string()
+      .min(3, 'Too Short!')
+      .max(50, 'Too Long!')
+      .required('Please enter your username.'),
+      email: Yup.string().email('Invalid email').required('Please enter your email address.'),
+      password: Yup.string()
+        .min(8)
+        .required('Please enter your password.')
+        .matches(
+            /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+            'must contain minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character.'
+        ),
+      password_confirmation: Yup.string()
+        .min(8, 'Confirm password must be 8 characters long')
+        .oneOf([Yup.ref('password')], 'Passwords do not match.')
+        .required('Confirm password is required'),
+  });
 
 
-	const createAccount = () => {
-		const headers = {
-		    'Content-Type': 'application/json', 
-			withCredentials: true 
-		  };
-		const userData = {name, email, username, password, password_confirmation: confirmPassword};
-		axios.post(`/auth/register`,
-		userData, 
-		{headers},)
+
+export default function SignUp() {
+
+	const navigation = useNavigation();
+	const {loading, error} = useSelector((state) => state.auth)
+
+	const dispatch = useDispatch();
+
+
+	const handleSubmit = async (values) => {
+		dispatch(registerPending()); 
+		AsyncStorage.setItem("userData", JSON.stringify(values));
+		const response = await axios.post('/auth/register', values)
 		.then(response => {
-			console.log(response.data.message);
-		  if (response.status >= 200 && !nameError && !emailError && !passwordError ) {
-			// Registration successful
+			if (response.data.status === true) {
+				dispatch(registerSuccessful(values));
+				}
 			navigation.navigate("verification")
-			setError('');
-		  } else {
-			console.log(userData);
-			setError(response.data.message);
-		  }
+			console.log(response.data);
+			console.log(values);
 		})
 		.catch(error => {
-		  console.error('Registration failed:', error.datda.message);
-		  setError('Registration failed. Please try again later.');
+			dispatch(registerFailed());
+			console.error('Registration failed:', error.data);
 		});
-	}
-
-	const handleSubmit =  async () => {
-		  const nameRegex = /^[a-zA-Z\s]+$/; // Allow only letters and spaces
-		  if (!name || !nameRegex.test(name)) {
-			setNameError('name field is required');
-		  }else{
-			  setNameError('');
-		  }
-
-		  if (!username) {
-			setUsernameError('username field is required');
-		  }else{
-			setUsernameError('');
-		  }
-
-		  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
-		  if (!email) {
-			setEmailError('email is required');
-		    } else if (!emailRegex.test(email)){
-			  setEmailError('please input a valid email address');
-		  }else{
-			setEmailError('');
-		  }
-
-		  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; //At least 8 characters with at least one letter and one number
-		  if (!password) {
-			setPasswordError('password field is required')
-		  }else if (!passwordRegex.test(password)){
-		    setPasswordError('password must contain 8 characters with at least one letter and one number')
-		  }else if(password !== confirmPassword){
-			setPasswordError('passwords do not match')
-		  }else{
-			setPasswordError('');
-		}
-
-		createAccount();
 	}
 
 
@@ -127,6 +108,7 @@ export default function SignUp({ navigation }) {
 						</View>
 						<View>
 							<Text
+							onPress={()=>navigation.navigate('login')}
 								style={{
 									marginTop: 10,
 									marginLeft: 10,
@@ -165,6 +147,22 @@ export default function SignUp({ navigation }) {
 							Create a free account to get access to unlimited books and ebooks
 						</Text>
 					</View>
+
+                    <Formik
+                     initialValues={{
+                      name: '',
+                      username: '',
+                      email: '',
+                      password: '', 
+                      password_confirmation: '',
+                     }}
+                     validationSchema={SignupSchema}
+                    //  onSubmit={values => Alert.alert(JSON.stringify(values))}
+                     onSubmit={handleSubmit}
+                    >
+                        {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit})=> (
+                    <View>
+
 					<View
 						style={{
 							border: "2",
@@ -178,14 +176,17 @@ export default function SignUp({ navigation }) {
 					>
 						{/* FULL NAME */}
 						<TextInput
+							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
 							placeholderTextColor={"#141414"}
 							placeholder="Full Name"
-							value={name}
-							onChangeText={(text) => setName(text)}
-							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
+                            values={values.name}
+                            onChangeText={handleChange('name')}
+                            onBlur={() => setFieldTouched('name')}
 						/>
 					</View>
-					<Text style={{color: 'red'}}>{nameError}</Text>
+                    {touched.name && errors.name && (
+                        <Text style={{color: 'red'}}>{errors.name}</Text>
+                    )}
 
 					<View
 						style={{
@@ -200,14 +201,17 @@ export default function SignUp({ navigation }) {
 					>
 						{/* USERNAME */}
 						<TextInput
+							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
 							placeholderTextColor={"#141414"}
 							placeholder="Username"
-							value={username}
-							onChangeText={(text) => setUsername(text)}
-							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
+                            values={values.username}
+                            onChangeText={handleChange('username')}
+                            onBlur={() => setFieldTouched('username')}
 						/>
 					</View>
-					<Text style={{color: 'red'}}>{usernameError}</Text>
+                    {touched.username && errors.username && (
+                        <Text style={{color: 'red'}}>{errors.username}</Text>
+                    )}
 
 					<View
 						style={{
@@ -225,11 +229,15 @@ export default function SignUp({ navigation }) {
 							placeholderTextColor={"#141414"}
 							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
 							placeholder="Email"
-							value={email}
-							onChangeText={(text) => setEmail(text)}
+                            // autoCapitalize={false}
+                            values={values.email}
+                            onChangeText={handleChange('email')}
+                            onBlur={() => setFieldTouched('email')}
 						/>
 					</View>
-						<Text style={{color: 'red'}}>{emailError}</Text>
+                    {touched.email && errors.email && (
+                        <Text style={{color: 'red'}}>{errors.email}</Text>
+                    )}
 
 					<View
 						style={{
@@ -244,14 +252,18 @@ export default function SignUp({ navigation }) {
 					>
 						{/* PASSWORD */}
 						<TextInput
+							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
 							placeholderTextColor={"#141414"}
 							placeholder="Password"
-							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
-							value={password}
-							onChangeText={(text) => setPassword(text)}
+                            // autoCapitalize={false} 
+                            values={values.password}
+                            onChangeText={handleChange('password')}
+                            onBlur={() => setFieldTouched('password')}
 						/>
 					</View>
-						<Text style={{color: 'red'}}>{passwordError}</Text>
+                    {touched.password && errors.password && (
+                        <Text style={{color: 'red'}}>{errors.password}</Text>
+                    )}
 
 					<View
 						style={{
@@ -266,30 +278,38 @@ export default function SignUp({ navigation }) {
 					>
 						{/* CONFIRM PASSWORD */}
 						<TextInput
+							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
 							placeholderTextColor={"#141414"}
 							placeholder="Confirm Password"
-							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
-							value={confirmPassword}
-							onChangeText={(text) => setConfirmPassword(text)}
+                            values={values.password_confirmation}
+                            onChangeText={handleChange('password_confirmation')}
+                            onBlur={() => setFieldTouched('password_confirmation')}
 						/>
 					</View>
-					<Text style={{color: 'red'}}>{passwordError}</Text>
+                    {touched.password_confirmation && errors.password_confirmation && (
+                        <Text style={{color: 'red'}}>{errors.password_confirmation}</Text>
+                    )}
 
+					    {/* BUTTON */}
 					<View>
+                        { error && <Text style={{color: 'red'}}>{'Username or Email already registered'}</Text>}
 						<TouchableOpacity
-							onPress={handleSubmit}
-							style={{
-								backgroundColor: "#141414",
-								padding: 15,
-								borderRadius: 5,
-								alignItems: "center",
-								marginVertical: 10,
-							}}
+                        style={[
+                            styles.submitButton, {backgroundColor: isValid ? '#141414' : 'red'}
+                          ]}
+                            onPress={handleSubmit}
+                            disabled={!isValid}
 						>
-							<Text style={{ color: "#FFFFFF" }}>Create an Account</Text>
+							<Text style={{ color: "#FFFFFF" }}>
+								{loading ? 'Loading...' : 'Create an Account'}
+							</Text>
 						</TouchableOpacity>
 					</View>
-					<Text style={{color: 'red'}}>{error}</Text>
+
+                    </View>
+                    )}
+                    </Formik>
+
 					<View style={{ alignItems: "center" }}>
 						<Text
 							style={{ fontFamily: "Inter", fontSize: 15, color: "#505050" }}
@@ -332,3 +352,13 @@ export default function SignUp({ navigation }) {
 		</SafeAreaView>
 	);
 }
+
+const styles = StyleSheet.create({
+    submitButton: {
+        // backgroundColor: "#141414",
+        padding: 15,
+        borderRadius: 5,
+        alignItems: "center",
+        marginVertical: 10,
+    }
+})

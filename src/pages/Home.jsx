@@ -1,17 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Image, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import recent from '../data/search/recentSearch'
 import home from '../data/home'
 import { useNavigation } from '@react-navigation/native'
 import Drawer from '../components/home/Drawer'
+import { useSelector } from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Home = () => {
+    const [user, setUser] = useState('');
     const [tab, setTab] = useState(true);
 
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const navigation = useNavigation();
+
 
     const category = [
         {
@@ -51,6 +55,19 @@ const Home = () => {
         },
     ]
 
+    useEffect(() => {
+        getUserData();
+    }, []);
+
+    const getUserData = async () => {
+        const userData = await AsyncStorage.getItem('userData');
+        if(userData) {
+            console.log('Homescreen');
+            console.log(JSON.parse(userData));
+            setUser(JSON.parse(userData));
+        }
+    }
+
   return (
     <SafeAreaView style={styles.container}>
     <ScrollView contentContainerStyle={styles.wrapper}>
@@ -65,7 +82,7 @@ const Home = () => {
             </Pressable>
         </View>
 
-        <Text style={{fontSize: 32, fontWeight: 400, color: '#1338BE' , marginTop: 25}}>Welcome, Isaac</Text>
+        <Text style={{fontSize: 32, fontWeight: 400, color: '#1338BE' , marginTop: 25}}>Welcome, {user.name}</Text>
 
         <Image style={{height: 210.67, width: 316, marginTop: 5}} source={require('../../assets/images/book.png')} />
 

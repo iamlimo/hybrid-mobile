@@ -11,7 +11,35 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-export default function PasswordReset({ navigation }) {
+import { useDispatch, useSelector } from "react-redux";
+import { verifyEmailPending, verifyEmailSuccess, verifyEmailfailed } from "../src/Store/AuthSlice";
+import { Formik } from "formik";
+import * as Yup from 'yup';
+import { useNavigation } from "@react-navigation/native";
+import axios from "../src/axios";
+
+
+const SignupSchema = Yup.object().shape({
+	email: Yup.string().email('Incorrect email').required('Please enter your email address.'),
+});
+
+export default function PasswordReset() {
+	const {loading, error} = useSelector((state) => state.auth.loading)
+	const dispatch = useDispatch();
+	const navigation = useNavigation();
+
+	const handleSubmit = async (values) => {
+		const response = await axios.post('auth/verify-email', values)
+		.then(response => {
+			navigation.navigate('prompt')
+		})
+		.catch(error => {
+			dispatch(verifyEmailfailed())
+			console.error('Registration failed:', error.data);
+			throw error;
+		})
+	}
+
 	return (
 		<SafeAreaView>
 			<ScrollView
@@ -73,6 +101,15 @@ export default function PasswordReset({ navigation }) {
 							account.
 						</Text>
 					</View>
+					<Formik
+					  initialValues={{
+				      email: '',
+					   }}
+					  validationSchema={SignupSchema}
+					  onSubmit={handleSubmit}
+					>
+						{({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit})=> (
+					<View>
 					<View
 						style={{
 							border: "2",
@@ -86,26 +123,34 @@ export default function PasswordReset({ navigation }) {
 						}}
 					>
 						<TextInput
+							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
 							placeholderTextColor={"#141414"}
 							placeholder="Enter your Email"
-							style={{ color: "#141414", fontFamily: "Inter", fontSize: 16.5 }}
+							values={values.email}
+                            onChangeText={handleChange('email')}
+                            onBlur={() => setFieldTouched('email')}
 						/>
 					</View>
+					{touched.email && errors.email && (
+                        <Text style={{color: 'red'}}>{errors.email}</Text>
+                    )}
 
 					<View>
 						<TouchableOpacity
-							onPress={() => navigation.navigate("prompt")}
-							style={{
-								backgroundColor: "#FFD672",
-								padding: 15,
-								borderRadius: 5,
-								alignItems: "center",
-								marginVertical: 10,
-							}}
+							style={[
+								styles.submitButton, {backgroundColor: isValid ? '#FFD672' : 'red'}
+							]}
+							onPress={handleSubmit}
+							disabled={!isValid}
 						>
-							<Text style={{ color: "#000000" }}>Submit</Text>
+							<Text style={{ color: "#000000" }}>
+							{loading ? 'Loading...' : 'Submit'}
+							</Text>
 						</TouchableOpacity>
 					</View>
+					</View>
+					)}
+					</Formik>
 					<View>
 						<TouchableOpacity
 							onPress={() => navigation.navigate("verification")}
@@ -141,4 +186,10 @@ const styles = StyleSheet.create({
 	imageStyle: {
 		borderRadius: 10,
 	},
+	submitButton: {
+		padding: 15,
+		borderRadius: 5,
+		alignItems: "center",
+		marginVertical: 10,
+	}
 });
